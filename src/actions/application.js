@@ -27,25 +27,17 @@ export const loadListTodo = () => {
     dispatch({
       type: "LOAD_LIST_TODO_REQUEST",
     })
-    const listTodo = await new Promise(function(resolve, reject) {
-      setTimeout(function () {
-        resolve([
-          {
-        		todo: "Learn typescript",
-      			done: false
-        	},
-          {
-        		todo: "Try immer",
-        		done: false
-        	}
-        ])
-      }, 2000);
-    });
-    dispatch({
-      type: "LOAD_LIST_TODO_SUCCESS",
-      payload: {
-        listTodo
-      }
-    })
+    try {
+      const listTodo = await get("http://jsonplaceholder.typicode.com/users/1/todos")
+      dispatch({
+        type: "LOAD_LIST_TODO_SUCCESS",
+        payload: {
+          listTodo
+        }
+      })
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
 }

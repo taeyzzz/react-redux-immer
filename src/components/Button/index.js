@@ -10,7 +10,7 @@ const Button = (props) => {
 
   console.log("render Button");
   return (
-    <ButtonStyled onClick={handleClicked}>
+    <ButtonStyled onClick={handleClicked} disabled={props.disabled}>
       {props.text}
     </ButtonStyled>
   )

@@ -30,7 +30,7 @@ const application = (state = initialState, action) => {
 		}
 		case "ADD_TODO": {
 			const prepared = {
-				todo: action.payload.text,
+				title: action.payload.text,
 				done: false
 			}
 			return produce(state, draft => {

@@ -9,9 +9,11 @@ import * as ApplicationActions from '../../actions/application'
 import TodoForm from '../../components/TodoForm/Loadable'
 import Button from '../../components/Button/Loadable'
 
+import useFormInput from '../../components/TodoForm/hooks/useFormInput'
+
 import ApplicationStyled from './styled'
 
-const Application = (props) => {
+const Application = () => {
   const listTodo = useSelector(state => state.application.listTodo, shallowEqual)
   const loadStatus = useSelector(state => state.application.loadListTodo.fetchStatus, shallowEqual)
   const actions = useActions(Object.assign({}, ApplicationActions))
@@ -20,7 +22,7 @@ const Application = (props) => {
     actions.loadListTodo()
   }, [])
 
-  const [todoTitle, setTodoTitle] = useState("")
+  const [todoTitle, isTodoValid, updateTodo] = useFormInput()
 
   const handleDONE = useCallback((index) => {
     actions.updateTodo(index)
@@ -28,26 +30,29 @@ const Application = (props) => {
 
   const renderList = () => {
     return listTodo.map((obj, index) => {
+      const btn = (
+        <Button
+          data={index}
+          text="DONE"
+          onClick={handleDONE}
+        />
+      )
       return (
         <div style={{display: "flex"}} key={index}>
-          <div>{obj.done ? "DONE" : "GOING"} ===> {obj.todo}</div>
-          <Button
-            data={index}
-            text="DONE"
-            onClick={handleDONE}
-          />
+          <div>{obj.done ? "DONE" : "GOING"} ===> {obj.title}</div>
+          {!obj.done && btn}
         </div>
       )
     })
   }
 
   const handleInputChanged = useCallback((e, value) => {
-    setTodoTitle(value)
+    updateTodo(value)
   })
 
   const handleAddClicked = useCallback(() => {
     actions.addTodo(todoTitle)
-    setTodoTitle("")
+    updateTodo("")
   }, [todoTitle])
 
   console.log("render application");
@@ -57,6 +62,7 @@ const Application = (props) => {
         inputValue={todoTitle}
         onInputChanged={handleInputChanged}
         onAddClicked={handleAddClicked}
+        disabled={!isTodoValid}
       />
       <div>
         TODO List : {loadStatus === "request" ? "Loading..." : "Idle"}

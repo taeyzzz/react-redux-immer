@@ -23,6 +23,7 @@ const TodoForm = (props) => {
         <Button
           text="ADD"
           onClick={props.onAddClicked}
+          disabled={props.disabled}
         />
       </div>
     </div>
